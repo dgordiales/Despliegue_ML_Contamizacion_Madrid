@@ -1,0 +1,62 @@
+{
+  "modelo": "Ridge",
+  "alpha": 1000,
+  "target": "no2",
+  "metrica_principal": "MAE",
+  "escenario": "Predicción diaria utilizando la observación anterior disponible de NO2",
+  "periodo_train": {
+    "inicio": "2019-01-02",
+    "fin": "2023-09-24"
+  },
+  "periodo_test": {
+    "inicio": "2023-09-26",
+    "fin": "2024-11-30"
+  },
+  "filas_train": 40705,
+  "filas_test_evaluadas": 10248,
+  "cobertura_test": 0.9976635514018691,
+  "variables_modelo": [
+    "temperatura",
+    "humedad",
+    "viento_vel",
+    "precipitacion",
+    "intensidad_mean",
+    "intensidad_max",
+    "ocupacion_mean",
+    "carga_mean",
+    "vmed_mean",
+    "vmed_max",
+    "distancia_meteo_km",
+    "distancia_trafico_km",
+    "mes_sin",
+    "mes_cos",
+    "dia_anio_sin",
+    "dia_anio_cos",
+    "finde",
+    "no2_lag1",
+    "no2_lag7",
+    "no2_roll_mean_3",
+    "no2_roll_mean_7",
+    "viento_vel_missing",
+    "precipitacion_missing",
+    "estacion",
+    "tipo_elem_moda",
+    "estacion_anio"
+  ],
+  "variables_excluidas": [
+    "fecha",
+    "no2",
+    "estacion_no2_mean"
+  ],
+  "metricas_test": {
+    "MAE": 6.959357153812335,
+    "RMSE": 8.998921327041662,
+    "R2": 0.6543817576049569
+  },
+  "metricas_baseline_test": {
+    "MAE": 7.216334894613583,
+    "RMSE": 9.811210709264014,
+    "R2": 0.5891711318379997
+  },
+  "mejora_mae_porcentaje": 3.5610561947874846
+}
