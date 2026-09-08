@@ -101,7 +101,9 @@ requirements.txt            # Dependencias
 
 ### Despliegue
 
-El servicio puede desplegarse en Render utilizando Python 3.13.
+El servicio está desplegado en Render (Python 3.13, fijado mediante `.python-version`) sobre la rama `feature/deploy`:
+
+**https://despliegue-ml-contamizacion-madrid.onrender.com**
 
 Comando de instalación:
 
@@ -115,11 +117,17 @@ Comando de inicio:
 python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
 ```
 
-El modelo se carga desde una ruta relativa al código, por lo que no depende de las carpetas personales del ordenador. El despliegue y la configuración del servicio se realizarán en la rama `feature/deploy`.
+El modelo se carga desde una ruta relativa al código, por lo que no depende de las carpetas personales del ordenador.
+
+Render redespliega automáticamente con cada `git push` a la rama conectada, sin configuración manual de webhooks.
+
+> Render puede dejar inactivo el servicio tras un periodo de tiempo sin actividad: la primera petición después de la inactividad puede tardar hasta un minuto en responder.
 
 ### Tercer endpoint
 
-El endpoint informativo `GET /info` está preparado y comentado en `app/main.py`. Puede activarse durante la demostración y desplegarse de nuevo.
+### Tercer endpoint
+
+El endpoint informativo `GET /info` está preparado y comentado en `app/main.py`. Para activarlo durante la demostración basta con descomentarlo y hacer `git push`: Render lo redespliega automáticamente en menos de un minuto. El procedimiento ya se ha probado en un ensayo previo.
 
 ### Limitaciones
 
