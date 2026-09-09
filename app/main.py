@@ -64,3 +64,9 @@ def predecir(datos: str = Query(..., description="JSON con las 26 variables del 
 #         "contaminante": "NO2",
 #         "unidad": "µg/m³",
 #     }
+
+
+# Endpoint opcional de reentrenamiento.
+from app.reentrenamiento_api import router as router_reentrenamiento
+
+app.include_router(router_reentrenamiento)

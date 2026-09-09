@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Modelos generados durante el reentrenamiento
+modelos_reentrenados/

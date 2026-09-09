@@ -130,3 +130,46 @@ El ejemplo incluido es histórico y se utiliza para demostrar el funcionamiento 
 ### Proyecto original
 
 Modelo reutilizado de [ML_Contaminacion_Madrid](https://github.com/dgordiales/ML_Contaminacion_Madrid), realizado en el Bootcamp Data Science & IA de The Bridge.
+
+### Bonus: reentrenamiento
+
+Se ha añadido el endpoint opcional `POST /reentrenar`, que permite entrenar una nueva versión del modelo Ridge a partir de un CSV preparado. Reutiliza la configuración del pipeline original, incluyendo el preprocesamiento y `Ridge(alpha=1000)`.
+
+El CSV debe contener las 26 variables utilizadas por el modelo y la columna objetivo `no2`. Los datos meteorológicos, de tráfico, temporales y los lags deben estar previamente calculados. El endpoint no descarga datos ni realiza ingeniería de variables desde datos brutos.
+
+El reentrenamiento utiliza una copia del pipeline y guarda el resultado en `modelos_reentrenados/modelo_ridge_no2_reentrenado.joblib`. No sustituye el modelo original ni activa automáticamente el nuevo modelo en `/predict`. Los archivos generados no se incluyen en Git.
+
+#### Ejecución local
+
+El endpoint está protegido mediante la variable de entorno `REENTRENAMIENTO_TOKEN`. Si no está configurada, no se permite el reentrenamiento. No se deben guardar claves reales en el repositorio.
+
+Para iniciar la API localmente con una clave de demostración:
+
+    REENTRENAMIENTO_TOKEN=prueba-local-no-produccion python -m uvicorn app.main:app --host 127.0.0.1 --port 8001
+
+La petición debe incluir el archivo CSV y la cabecera `X-Admin-Token`. El tamaño máximo admitido es de 20 MB. Las entradas incorrectas devuelven HTTP 422, los archivos demasiado grandes HTTP 413 y las peticiones no autorizadas HTTP 403.
+
+#### Pruebas realizadas
+
+Se ha probado el reentrenamiento con el conjunto original y con una simulación de actualización histórica. En esta última se añadieron observaciones anteriores al 1 de junio de 2024 y se reservó el periodo posterior para evaluación.
+
+- Filas utilizadas para reentrenar: 46.582.
+- Filas reservadas para evaluación: 4.371.
+- MAE del modelo original: 6,3160.
+- MAE del modelo reentrenado: 6,2211.
+
+La mejora corresponde únicamente a este ensayo histórico y no garantiza un mejor rendimiento futuro. El conjunto de evaluación ya había formado parte de la evaluación del proyecto original, por lo que no constituye una validación externa independiente.
+
+El script `tests/test_reentrenamiento.py` comprueba la autorización, los datos inválidos, el límite de tamaño, el entrenamiento y que el archivo del modelo original no se modifique.
+
+Para repetir las pruebas se utiliza la muestra de 300 filas incluida en `ejemplos/datos_reentrenamiento_prueba.csv`. No es necesario descargar el proyecto original ni preparar el CSV temporal. Con la API local iniciada y la misma clave configurada, el script se ejecuta con:
+
+    REENTRENAMIENTO_TOKEN=prueba-local-no-produccion python tests/test_reentrenamiento.py
+
+La prueba válida vuelve a entrenar el modelo con la muestra de 300 filas y sustituye únicamente el archivo de demostración generado. El modelo original permanece intacto. Este script comprueba archivos locales y no debe utilizarse contra Render. La simulación histórica completa de 46.582 filas se realizó por separado.
+
+#### Limitaciones del despliegue
+
+El bonus está probado localmente. No se ha desplegado ni activado en Render. El almacenamiento local de un servicio puede no ser persistente, por lo que guardar un modelo en el servidor no equivale a publicarlo o conservarlo de forma permanente.
+
+Antes de desplegar el endpoint se deben revisar la autenticación, los recursos disponibles, el tamaño de los archivos y la estrategia de almacenamiento. La activación de un nuevo modelo en producción queda fuera de este bonus.
