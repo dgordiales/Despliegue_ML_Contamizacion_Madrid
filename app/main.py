@@ -57,13 +57,13 @@ def predecir(datos: str = Query(..., description="JSON con las 26 variables del 
 # Tercer endpoint preparado para la demostración.
 # Para activarlo, descomentar estas líneas y volver a desplegar.
 #
-# @app.get("/info")
-# def informacion():
-#     return {
-#         "modelo": "Ridge",
-#         "contaminante": "NO2",
-#         "unidad": "µg/m³",
-#     }
+@app.get("/info")
+def informacion():
+    return {
+        "modelo": "Ridge",
+        "contaminante": "NO2",
+        "unidad": "µg/m³",
+    }
 
 
 # Endpoint opcional de reentrenamiento.
